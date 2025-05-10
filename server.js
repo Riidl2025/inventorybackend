@@ -73,7 +73,11 @@ const dashboardRoutes = require("./routes/dashboardRoutes")
 const app = express()
 
 // Middleware
-app.use(cors())
+app.use(cors({
+  origin: "https://inventory-lake-chi.vercel.app",  // Vercel URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}))
 app.use(express.json())
 app.use(morgan("dev"))
 
