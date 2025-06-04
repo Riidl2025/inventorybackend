@@ -73,13 +73,35 @@ const dashboardRoutes = require("./routes/dashboardRoutes")
 const app = express()
 
 // Middleware
+// app.use(cors({
+//   origin: ["https://inventory-lake-chi.vercel.app", "http://localhost:5173"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   credentials: true
+// }));
+
+// app.use(express.json())
+// app.use(morgan("dev"))
+const allowedOrigins = [
+  "https://inventory-lake-chi.vercel.app",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-  origin: "https://inventory-lake-chi.vercel.app",  // Vercel URL
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS: " + origin));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
-}))
-app.use(express.json())
-app.use(morgan("dev"))
+}));
+
+app.use(express.json());
+app.use(morgan("dev"));
+
 
 // Connect to MongoDB
 mongoose
